@@ -1,0 +1,540 @@
+{
+  "role": "UI Developer Intern",
+  "assignment": {
+    "title": "Animated Score Reveal & Combo Streak UI",
+    "project": "Matiks",
+    "estimatedTime": "3-4 hours",
+    "framework": {
+      "primary": "React Native (Expo)",
+      "animationLibrary": "Reanimated 3"
+    }
+  },
+  "problemStatement": "After a multiplayer math duel ends, Matiks needs an immersive post-game score reveal screen. You must build it with production-quality animations.",
+  "designPhilosophy": {
+    "overall": "Premium, high-energy gaming aesthetic. Think Clash Royale end-screen meets Apple design polish. Every element should feel intentional, weighted, and satisfying.",
+    "moodKeywords": ["cinematic", "celebratory", "competitive", "sleek", "immersive"],
+    "inspirations": ["Clash Royale post-match", "Duolingo streak celebrations", "Apple Fitness ring completion", "Wordle share screen"]
+  },
+  "visualDesignSystem": {
+    "colorPalette": {
+      "background": {
+        "type": "gradient",
+        "style": "radial or linear gradient, dark-to-deeper-dark for depth",
+        "primary": "#0F0F1A",
+        "secondary": "#1A1A2E",
+        "accent": "#16213E",
+        "notes": "Dark, immersive background that lets animated elements pop. Subtle animated gradient shift for a living feel."
+      },
+      "scoreText": {
+        "primary": "#FFFFFF",
+        "glow": "#FFD700",
+        "notes": "White with a soft golden glow/shadow to feel premium and victorious"
+      },
+      "comboStreak": {
+        "badgeBackground": "linear-gradient(135deg, #FF6B35, #FF2E63)",
+        "text": "#FFFFFF",
+        "glowColor": "rgba(255, 107, 53, 0.4)",
+        "notes": "Hot gradient from orange to magenta, with a warm ambient glow behind the badge"
+      },
+      "rankText": {
+        "primary": "#E0E0E0",
+        "highlight": "#00D4FF",
+        "notes": "Rank number in cyan/electric blue to contrast with the golden score"
+      },
+      "shareButton": {
+        "background": "linear-gradient(90deg, #6C63FF, #3F3D9E)",
+        "text": "#FFFFFF",
+        "shimmerColor": "rgba(255, 255, 255, 0.3)",
+        "notes": "Rich purple gradient with white shimmer sweep"
+      },
+      "confetti": {
+        "particleColors": ["#FFD700", "#FF6B35", "#FF2E63", "#00D4FF", "#6C63FF", "#00FF88"],
+        "notes": "Vibrant, multi-colored particles for maximum celebration energy"
+      }
+    },
+    "typography": {
+      "scoreNumber": {
+        "fontSize": 72,
+        "fontWeight": "900",
+        "fontFamily": "System bold / SF Pro Display Heavy or equivalent",
+        "letterSpacing": -2,
+        "notes": "Massive, heavy-weight number that dominates the screen. Use tabular/monospaced numerals so digits don't shift width during count-up."
+      },
+      "scoreLabel": {
+        "fontSize": 16,
+        "fontWeight": "600",
+        "textTransform": "uppercase",
+        "letterSpacing": 4,
+        "color": "rgba(255,255,255,0.5)",
+        "text": "YOUR SCORE",
+        "notes": "Small, spaced-out label above the score for context"
+      },
+      "comboText": {
+        "fontSize": 20,
+        "fontWeight": "700",
+        "notes": "Bold and punchy, emoji should be slightly larger than text"
+      },
+      "rankNumber": {
+        "fontSize": 28,
+        "fontWeight": "800",
+        "notes": "The '#3' portion should be large and emphasized"
+      },
+      "rankSubtext": {
+        "fontSize": 16,
+        "fontWeight": "400",
+        "color": "rgba(255,255,255,0.5)",
+        "notes": "'of 1,200' in lighter weight and muted color"
+      },
+      "shareButtonText": {
+        "fontSize": 18,
+        "fontWeight": "700",
+        "textTransform": "uppercase",
+        "letterSpacing": 1.5
+      }
+    },
+    "layout": {
+      "structure": "Single full-screen view, vertically centered content stack",
+      "spacing": {
+        "betweenSections": 32,
+        "screenPadding": 24,
+        "notes": "Generous whitespace between elements. Don't crowd the screen - let each element breathe."
+      },
+      "hierarchy": [
+        "Score label ('YOUR SCORE') - top of content stack, subtle",
+        "Score number (2840) - hero element, largest visual weight",
+        "Combo streak badge - secondary emphasis, centered below score",
+        "Rank reveal - tertiary, below combo badge",
+        "Share button - pinned toward bottom of content area, full width with rounded corners"
+      ],
+      "safeAreas": "Respect device safe areas (notch, home indicator). Use SafeAreaView.",
+      "responsiveness": "Content should scale gracefully across screen sizes. Use percentage-based spacing or flexbox, not fixed pixel positions."
+    },
+    "visualEffects": {
+      "scoreGlow": {
+        "description": "Soft golden glow behind the score number that pulses subtly when count-up completes",
+        "implementation": "Use multiple overlapping Text shadows or an absolutely positioned blurred view",
+        "shadowConfig": {
+          "color": "rgba(255, 215, 0, 0.3)",
+          "blurRadius": 30,
+          "offset": { "x": 0, "y": 0 }
+        }
+      },
+      "backgroundParticles": {
+        "description": "Optional: subtle floating ambient particles or bokeh dots in the background for depth",
+        "opacity": "0.05-0.15",
+        "notes": "Very subtle, should not distract from main content"
+      },
+      "comboBadgeShadow": {
+        "description": "Warm colored shadow/glow behind the combo badge for a floating effect",
+        "shadowConfig": {
+          "color": "rgba(255, 107, 53, 0.4)",
+          "blurRadius": 20,
+          "offset": { "x": 0, "y": 4 }
+        }
+      },
+      "shareButtonShadow": {
+        "description": "Elevated shadow on the share button for depth and tappability",
+        "shadowConfig": {
+          "color": "rgba(108, 99, 255, 0.4)",
+          "blurRadius": 16,
+          "offset": { "x": 0, "y": 6 }
+        }
+      }
+    },
+    "microInteractions": {
+      "scoreCountUp": {
+        "description": "During count-up, add a subtle scale pulse on each major milestone (every 500 or 1000 points)",
+        "scalePulse": { "from": 1.0, "to": 1.03, "duration": 100 }
+      },
+      "comboNumberSlot": {
+        "description": "The combo number (7) could have a brief slot-machine style flip-in before settling",
+        "style": "vertical slide with slight blur during transition"
+      },
+      "rankHashSymbol": {
+        "description": "The '#' symbol in rank could have a subtle color shift or glow when it appears",
+        "effect": "brief golden flash that fades to cyan"
+      },
+      "shareButtonIdle": {
+        "description": "Beyond shimmer, the button should have a very subtle breathing scale (1.0 to 1.01) to feel alive",
+        "breathing": { "minScale": 1.0, "maxScale": 1.01, "duration": 2000 }
+      }
+    },
+    "borderAndShape": {
+      "comboBadge": {
+        "borderRadius": 16,
+        "paddingHorizontal": 20,
+        "paddingVertical": 10,
+        "notes": "Pill-shaped badge with generous padding"
+      },
+      "shareButton": {
+        "borderRadius": 16,
+        "paddingVertical": 16,
+        "width": "100% minus screen padding",
+        "notes": "Full-width rounded rectangle, large enough for comfortable tap target (min 48px height)"
+      }
+    }
+  },
+  "animationPolish": {
+    "springConfigs": {
+      "bouncyEntry": {
+        "damping": 8,
+        "stiffness": 150,
+        "mass": 0.8,
+        "notes": "Energetic bounce for combo badge entry - noticeable overshoot"
+      },
+      "settleSpring": {
+        "damping": 15,
+        "stiffness": 120,
+        "mass": 1,
+        "notes": "Smooth settle for elements landing into place"
+      },
+      "buttonPress": {
+        "damping": 10,
+        "stiffness": 200,
+        "mass": 0.5,
+        "notes": "Snappy, responsive press feedback"
+      }
+    },
+    "timingConfigs": {
+      "scoreCountDuration": {
+        "durationMs": 2000,
+        "easing": "Easing.bezier(0.25, 0.1, 0.25, 1) - ease-out for deceleration feel",
+        "notes": "Score counts fast initially then decelerates as it approaches final value"
+      },
+      "fadeInDuration": {
+        "durationMs": 400,
+        "easing": "Easing.out(Easing.cubic)",
+        "notes": "Standard fade-in for rank and other appearing elements"
+      },
+      "slideUpDistance": {
+        "translateY": { "from": 60, "to": 0 },
+        "notes": "Rank slides up 60px - enough to feel dramatic without being jarring"
+      },
+      "shimmerSweepDuration": {
+        "durationMs": 1500,
+        "pauseBetweenMs": 2000,
+        "notes": "Shimmer takes 1.5s to sweep across, then pauses 2s before repeating. Not too fast."
+      }
+    },
+    "orchestrationTiming": {
+      "description": "Fine-tuned delays between elements for a cinematic reveal sequence",
+      "timeline": [
+        { "time": "0ms", "event": "Screen fades in, background gradient appears" },
+        { "time": "200ms", "event": "Score label ('YOUR SCORE') fades in" },
+        { "time": "400ms", "event": "Score counter starts ticking from 0" },
+        { "time": "1200ms", "event": "Combo streak badge bounces in (while score still counting)" },
+        { "time": "2400ms", "event": "Score counter finishes (2000ms count + 400ms start delay)" },
+        { "time": "2400ms", "event": "Confetti burst triggers (bonus)" },
+        { "time": "2500ms", "event": "Score glow pulses on completion" },
+        { "time": "2600ms", "event": "Rank slides up with fade (200ms after score completes)" },
+        { "time": "3200ms", "event": "Share button fades in and shimmer begins" }
+      ]
+    },
+    "animationPrinciples": [
+      "Ease-out on entrances (fast start, gentle stop) - elements arrive with energy",
+      "Spring physics for anything that overshoots - feels organic, not robotic",
+      "Stagger everything - no two elements should animate at exactly the same time",
+      "Looping animations should be subtle - draw attention without being distracting",
+      "60fps minimum - never drop frames. All animations on UI thread via Reanimated worklets",
+      "Avoid linear easing everywhere - it feels mechanical and cheap",
+      "Match animation intensity to element importance - score gets the biggest, most dramatic animation"
+    ]
+  },
+  "accessibilityAndUX": {
+    "reduceMotion": {
+      "description": "Respect the user's 'Reduce Motion' system setting",
+      "implementation": "Use useReducedMotion() from Reanimated. When enabled, skip animations and show final state instantly.",
+      "notes": "This is a quality signal - shows awareness of accessibility best practices"
+    },
+    "haptics": {
+      "scoreComplete": "Expo Haptics - notificationAsync(Success) when score finishes counting",
+      "comboReveal": "Expo Haptics - impactAsync(Medium) when combo badge bounces in",
+      "shareButtonPress": "Expo Haptics - impactAsync(Light) on button press",
+      "library": "expo-haptics",
+      "notes": "Haptics should complement animations, not replace them. iOS only - gracefully no-op on Android."
+    },
+    "touchTargets": {
+      "minimumSize": 48,
+      "notes": "Share button and any tappable elements must be at least 48x48px"
+    },
+    "screenReader": {
+      "scoreAnnouncement": "Announce final score once counting animation completes",
+      "accessibilityLabels": "All interactive elements need proper accessibilityLabel and accessibilityRole"
+    }
+  },
+  "requirements": [
+    {
+      "id": "score-counter-animation",
+      "title": "Score Counter Animation",
+      "description": "Animate a number from 0 to the player's final score with a ticking effect and slight overshoot.",
+      "details": [
+        "Animate a number from 0 to the player's final score (e.g., 2840)",
+        "Numbers should appear to 'tick up' with slight overshoot"
+      ],
+      "animationSpecs": {
+        "type": "counting",
+        "startValue": 0,
+        "exampleEndValue": 2840,
+        "behavior": "tick-up with overshoot",
+        "reanimatedAPIs": ["useSharedValue", "withTiming", "useAnimatedStyle"]
+      },
+      "uiPolish": {
+        "textShadow": "Soft golden glow (textShadowColor: rgba(255,215,0,0.5), textShadowRadius: 20) behind the number",
+        "tabularNumerals": "Use monospaced/tabular figures so digits don't shift horizontally during count-up",
+        "completionFlash": "Brief white flash overlay (opacity 0 -> 0.15 -> 0) when counter reaches final value to punctuate the moment",
+        "scaleOnComplete": "Subtle scale pulse (1.0 -> 1.05 -> 1.0) when the number lands on its final value"
+      }
+    },
+    {
+      "id": "combo-streak-badge",
+      "title": "Combo Streak Badge",
+      "description": "Display a combo streak badge with bounce entry animation and a looping flame pulse effect.",
+      "details": [
+        "Show a badge displaying: fire emoji + '7 Combo Streak!'",
+        "Entry animation: scale from 0 -> 1.15 -> 1.0 with a bounce",
+        "The flame emoji should have a looping pulse (scale + opacity) while visible"
+      ],
+      "animationSpecs": {
+        "entryAnimation": {
+          "type": "bounce-scale",
+          "keyframes": [
+            { "scale": 0, "phase": "start" },
+            { "scale": 1.15, "phase": "overshoot" },
+            { "scale": 1.0, "phase": "settle" }
+          ],
+          "reanimatedAPIs": ["withSequence", "withSpring"]
+        },
+        "flamePulse": {
+          "type": "looping-pulse",
+          "properties": ["scale", "opacity"],
+          "loop": true,
+          "reanimatedAPIs": ["withRepeat", "withTiming", "useAnimatedStyle"]
+        }
+      },
+      "uiPolish": {
+        "badgeGradient": "Hot orange-to-magenta gradient background (linear-gradient 135deg)",
+        "ambientGlow": "Warm colored shadow behind badge (rgba(255,107,53,0.4)) for floating depth effect",
+        "emojiScale": "Fire emoji should be 1.2x the size of surrounding text for visual punch",
+        "pillShape": "Fully rounded pill shape (borderRadius: height/2) with generous inner padding",
+        "textShadow": "Subtle dark text shadow for legibility against gradient background"
+      }
+    },
+    {
+      "id": "rank-reveal",
+      "title": "Rank Reveal",
+      "description": "Reveal the player's rank with a slide-up and fade-in animation, staggered after the score counter completes.",
+      "details": [
+        "Player rank (e.g., #3 of 1,200) slides up from below the fold with a fade",
+        "Stagger this 200ms after the score counter completes"
+      ],
+      "animationSpecs": {
+        "type": "slide-up-fade",
+        "direction": "bottom-to-top",
+        "fadeIn": true,
+        "staggerDelay": 200,
+        "staggerAfter": "score-counter-animation",
+        "exampleData": {
+          "rank": 3,
+          "totalPlayers": 1200
+        },
+        "reanimatedAPIs": ["withTiming", "withDelay", "useAnimatedStyle"]
+      },
+      "uiPolish": {
+        "rankHighlight": "The rank number (#3) in bright cyan/electric blue (#00D4FF) to contrast with golden score above",
+        "totalPlayersMuted": "'of 1,200' in muted gray (rgba(255,255,255,0.5)) and lighter font weight to create visual hierarchy",
+        "dividerLine": "Optional subtle horizontal line or decorative separator between combo badge and rank section",
+        "numberFormatting": "Use locale-aware number formatting (1,200 not 1200) for polished feel"
+      }
+    },
+    {
+      "id": "share-button",
+      "title": "Share Button",
+      "description": "A 'Share Result' CTA button with a shimmer/glint loop effect and press feedback animation.",
+      "details": [
+        "A 'Share Result' CTA with a shimmer/glint effect that runs on loop",
+        "On press: brief scale-down -> scale-up haptic-like feedback"
+      ],
+      "animationSpecs": {
+        "shimmerEffect": {
+          "type": "shimmer-glint",
+          "loop": true,
+          "description": "Continuous shimmer/glint effect running across the button surface"
+        },
+        "pressEffect": {
+          "type": "press-feedback",
+          "keyframes": [
+            { "scale": 1.0, "phase": "idle" },
+            { "scale": 0.95, "phase": "press-down" },
+            { "scale": 1.0, "phase": "release" }
+          ],
+          "hapticFeedback": true,
+          "reanimatedAPIs": ["withSequence", "withSpring", "useAnimatedStyle"]
+        }
+      },
+      "uiPolish": {
+        "gradientBackground": "Rich purple gradient (linear-gradient 90deg, #6C63FF to #3F3D9E)",
+        "elevatedShadow": "Deep colored shadow (rgba(108,99,255,0.4), blur 16, offset y:6) for raised button feel",
+        "fullWidth": "Full width minus screen padding, centered. Minimum height 56px for premium tap target.",
+        "shimmerImplementation": "Diagonal white streak (30deg angle) that sweeps left to right across the button surface using translateX animation on a clipped overlay",
+        "pressedState": "Scale to 0.96 + slight shadow reduction to feel like the button physically depresses",
+        "borderRadius": 16,
+        "iconOption": "Optional share/arrow icon to the right of text for visual clarity"
+      }
+    }
+  ],
+  "animationSequence": {
+    "description": "The overall orchestration timeline for the post-game score reveal screen.",
+    "order": [
+      {
+        "step": 1,
+        "component": "score-counter-animation",
+        "trigger": "onScreenMount",
+        "notes": "Begins immediately when screen loads"
+      },
+      {
+        "step": 2,
+        "component": "combo-streak-badge",
+        "trigger": "duringScoreCount",
+        "notes": "Badge enters with bounce while score is counting or shortly after"
+      },
+      {
+        "step": 3,
+        "component": "rank-reveal",
+        "trigger": "afterScoreComplete",
+        "delayMs": 200,
+        "notes": "Slides up 200ms after the score counter finishes"
+      },
+      {
+        "step": 4,
+        "component": "share-button",
+        "trigger": "afterRankReveal",
+        "notes": "Appears after rank reveal, shimmer loops continuously"
+      }
+    ]
+  },
+  "bonusChallenge": {
+    "id": "confetti-particle-burst",
+    "title": "Confetti Particle Burst",
+    "description": "Add a confetti particle burst using @shopify/react-native-skia when the score finishes counting.",
+    "library": "@shopify/react-native-skia",
+    "trigger": "onScoreCountComplete",
+    "particleSpecs": {
+      "count": "multiple randomized particles",
+      "properties": {
+        "trajectory": "randomized per particle",
+        "rotation": "randomized per particle",
+        "fadeOut": "each particle fades out individually"
+      }
+    },
+    "weight": "10% of evaluation"
+  },
+  "constraints": [
+    {
+      "rule": "Use Reanimated 3 APIs only",
+      "details": "Must use useSharedValue, useAnimatedStyle, withSpring, withTiming, withSequence, withRepeat",
+      "requiredAPIs": [
+        "useSharedValue",
+        "useAnimatedStyle",
+        "withSpring",
+        "withTiming",
+        "withSequence",
+        "withRepeat"
+      ]
+    },
+    {
+      "rule": "No third-party animation libraries",
+      "details": "No Lottie, no Skia (unless bonus challenge)",
+      "exceptions": ["@shopify/react-native-skia for bonus only"]
+    },
+    {
+      "rule": "Must work on Android",
+      "details": "iOS support also required if developing on Mac",
+      "platforms": ["android", "ios"]
+    },
+    {
+      "rule": "No setState inside animation callbacks",
+      "details": "Keep all animations on the UI thread for performance"
+    }
+  ],
+  "evaluationCriteria": [
+    {
+      "criterion": "Correct use of Reanimated 3 APIs (UI thread safety)",
+      "weight": "30%",
+      "description": "Proper usage of shared values, animated styles, and ensuring animations run on the UI thread without bridging to JS thread."
+    },
+    {
+      "criterion": "Animation feel - timing, easing, spring config",
+      "weight": "25%",
+      "description": "Smooth, polished animations with appropriate timing curves, spring damping/stiffness values, and natural-feeling motion."
+    },
+    {
+      "criterion": "Code structure & readability",
+      "weight": "20%",
+      "description": "Clean component architecture, separation of concerns, meaningful naming, and well-organized animation logic."
+    },
+    {
+      "criterion": "iOS + Android parity",
+      "weight": "15%",
+      "description": "Consistent animation behavior and visual appearance across both platforms."
+    },
+    {
+      "criterion": "Bonus: Skia canvas particle burst on score reveal",
+      "weight": "10%",
+      "description": "Implementation of the confetti particle system using @shopify/react-native-skia with randomized trajectory, rotation, and fade-out."
+    }
+  ],
+  "sampleData": {
+    "playerScore": 2840,
+    "comboStreak": 7,
+    "rank": 3,
+    "totalPlayers": 1200,
+    "shareButtonText": "Share Result"
+  },
+  "technicalNotes": {
+    "reanimated3KeyConcepts": [
+      "useSharedValue - create animation values that live on UI thread",
+      "useAnimatedStyle - derive styles from shared values without re-rendering",
+      "withSpring - physics-based spring animations for natural bounce",
+      "withTiming - duration-based animations with easing curves",
+      "withSequence - chain multiple animations in order",
+      "withRepeat - loop animations continuously or for N iterations",
+      "withDelay - delay animation start for staggering effects",
+      "runOnJS - only if absolutely needed to bridge back to JS thread"
+    ],
+    "performanceTips": [
+      "Never use setState to drive animations",
+      "All animation logic should use worklets (UI thread)",
+      "Use useAnimatedStyle instead of inline animated props where possible",
+      "Minimize JS-UI thread communication during animations"
+    ]
+  },
+  "qualityBar": {
+    "description": "The bar for visual quality is high. This screen is the emotional climax of a competitive game. It should feel like opening a loot box or completing a challenge in a AAA mobile game.",
+    "mustHaves": [
+      "No visual jank - 60fps smooth on mid-range Android devices",
+      "No layout jumps - elements should animate in, not snap and then adjust",
+      "Precise alignment - everything centered, spaced evenly, pixel-perfect",
+      "Color harmony - dark background, vibrant accents, consistent palette",
+      "Visual hierarchy - score is king, everything else supports it",
+      "Finishing touches - glows, shadows, gradients. Flat UI won't cut it.",
+      "The screen should make a player want to screenshot and share their result"
+    ],
+    "redFlags": [
+      "Flat white background with unstyled text",
+      "Animations that feel robotic (linear easing, no spring physics)",
+      "Elements appearing all at once instead of staggered reveal",
+      "Tiny text or cramped layout with no breathing room",
+      "Shimmer that looks like a loading skeleton instead of a glint effect",
+      "Janky or stuttering animations (JS thread overload)",
+      "Ignoring safe areas (content behind notch or overlapping home indicator)"
+    ],
+    "goldStandard": [
+      "Watching the screen feels like a 3-4 second cinematic moment",
+      "Each animation flows naturally into the next with no awkward pauses",
+      "The confetti burst (bonus) creates a genuine 'wow' moment",
+      "Haptic feedback syncs perfectly with visual beats",
+      "Someone watching over your shoulder would say 'that looks really good'",
+      "The screen would look right at home in a polished App Store game"
+    ]
+  }
+}
